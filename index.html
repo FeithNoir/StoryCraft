@@ -17,6 +17,9 @@
         <div class="container mx-auto flex justify-between items-center">
             <h1 class="text-2xl md:text-3xl font-bold title-font"><i class="fas fa-book-open mr-2"></i>StoryCraft</h1>
             <div class="flex space-x-4">
+                <button id="nav-projects" class="nav-btn px-4 py-2 rounded-lg bg-transparent hover:bg-blue-800 transition-colors">
+                    <i class="fas fa-project-diagram mr-2"></i>Proyectos
+                </button>
                 <button id="nav-escaleta" class="nav-btn px-4 py-2 rounded-lg bg-blue-700 hover:bg-blue-600 transition-colors">
                     <i class="fas fa-list-ol mr-2"></i>Escaleta
                 </button>
@@ -28,6 +31,40 @@
     </nav>
 
     <div class="container mx-auto p-4 md:p-6">
+        <!-- Módulo de Proyectos -->
+        <div id="projects-module" class="module hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 title-font">Mis Proyectos</h2>
+                <button id="nuevo-proyecto" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    <i class="fas fa-plus mr-2"></i>Nuevo Proyecto
+                </button>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="w-1/3">
+                        <input type="text" id="search-project" placeholder="Buscar proyecto..." class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                </div>
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="border-b-2 border-gray-200">
+                            <th class="p-3 text-left text-gray-600">Nombre del Proyecto</th>
+                            <th class="p-3 text-left text-gray-600">Escaleta Asociada</th>
+                            <th class="p-3 text-left text-gray-600">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="projects-table-body">
+                        <!-- Las filas de los proyectos se agregarán aquí -->
+                    </tbody>
+                </table>
+                <div class="flex justify-between items-center mt-4">
+                    <div id="pagination-controls">
+                        <!-- Los controles de paginación se agregarán aquí -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Módulo de Escaleta -->
         <div id="escaleta-module" class="module">
             <div class="flex justify-between items-center mb-6">

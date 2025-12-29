@@ -1,4 +1,5 @@
 // Datos de la aplicación
+let projectsData = [];
 let escaletaData = {
   acto1: [],
   acto2: [],
@@ -16,6 +17,9 @@ document.addEventListener("DOMContentLoaded", function () {
   cargarDatosGuardados();
 
   // Configurar navegación
+  document
+    .getElementById("nav-projects")
+    .addEventListener("click", () => mostrarModulo("projects"));
   document
     .getElementById("nav-escaleta")
     .addEventListener("click", () => mostrarModulo("escaleta"));
@@ -68,9 +72,21 @@ document.addEventListener("DOMContentLoaded", function () {
     .addEventListener("click", guardarCapitulo);
 
   // Inicializar con datos de ejemplo
-  if (escaletaData.acto1.length === 0 && personajesData.length === 0) {
+  if (
+    projectsData.length === 0 &&
+    escaletaData.acto1.length === 0 &&
+    personajesData.length === 0
+  ) {
     inicializarDatosEjemplo();
   }
+
+  // Nuevo: Event listeners para proyectos
+  document
+    .getElementById("nuevo-proyecto")
+    .addEventListener("click", () => crearNuevoProyecto());
+  document
+    .getElementById("search-project")
+    .addEventListener("input", () => renderizarProyectos());
 });
 
 // Funciones de navegación
@@ -92,13 +108,126 @@ function mostrarModulo(modulo) {
   document.getElementById(`nav-${modulo}`).classList.remove("bg-transparent");
   document.getElementById(`nav-${modulo}`).classList.add("bg-blue-700");
 
-  // Si es el módulo de personajes, renderizar la lista
+  // Renderizar el contenido del módulo
   if (modulo === "personajes") {
     renderizarPersonajes();
+  } else if (modulo === "projects") {
+    renderizarProyectos();
+  } else if (modulo === "escaleta") {
+    renderizarCapitulos();
   }
 }
 
-// Funciones para la escaleta
+// --- Funciones para Proyectos ---
+
+function renderizarProyectos(page = 1) {
+  const searchTerm = document.getElementById("search-project").value.toLowerCase();
+  const filteredProjects = projectsData.filter((p) =>
+    p.nombre.toLowerCase().includes(searchTerm)
+  );
+
+  const tableBody = document.getElementById("projects-table-body");
+  tableBody.innerHTML = "";
+
+  if (filteredProjects.length === 0) {
+    tableBody.innerHTML = `<tr><td colspan="3" class="text-center p-4 text-gray-500">No se encontraron proyectos.</td></tr>`;
+    return;
+  }
+
+  // Paginación
+  const itemsPerPage = 5;
+  const totalPages = Math.ceil(filteredProjects.length / itemsPerPage);
+  const start = (page - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  const paginatedProjects = filteredProjects.slice(start, end);
+
+  paginatedProjects.forEach((project) => {
+    const row = document.createElement("tr");
+    row.className = "border-b border-gray-200 hover:bg-gray-50";
+    row.innerHTML = `
+      <td class="p-3">${project.nombre}</td>
+      <td class="p-3">${project.escaletaId}</td>
+      <td class="p-3">
+        <button class="edit-project-btn px-3 py-1 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200" data-id="${project.id}">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="delete-project-btn px-3 py-1 bg-red-100 text-red-700 rounded-lg hover:bg-red-200" data-id="${project.id}">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    `;
+    tableBody.appendChild(row);
+  });
+
+  // Event listeners para botones de acción
+  tableBody.querySelectorAll(".edit-project-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) =>
+      editarProyecto(e.currentTarget.dataset.id)
+    );
+  });
+  tableBody.querySelectorAll(".delete-project-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) =>
+      eliminarProyecto(e.currentTarget.dataset.id)
+    );
+  });
+
+  renderizarControlesPaginacion(totalPages, page);
+}
+
+function renderizarControlesPaginacion(totalPages, currentPage) {
+  const paginationContainer = document.getElementById("pagination-controls");
+  paginationContainer.innerHTML = "";
+
+  if (totalPages <= 1) return;
+
+  for (let i = 1; i <= totalPages; i++) {
+    const button = document.createElement("button");
+    button.textContent = i;
+    button.className = `px-3 py-1 rounded-lg mx-1 ${
+      i === currentPage
+        ? "bg-blue-600 text-white"
+        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+    }`;
+    button.addEventListener("click", () => renderizarProyectos(i));
+    paginationContainer.appendChild(button);
+  }
+}
+
+function crearNuevoProyecto() {
+  const nombre = prompt("Introduce el nombre del nuevo proyecto:");
+  if (nombre && nombre.trim() !== "") {
+    const nuevoProyecto = {
+      id: generarId(),
+      nombre: nombre.trim(),
+      escaletaId: generarGuid(),
+    };
+    projectsData.push(nuevoProyecto);
+    guardarDatos();
+    renderizarProyectos();
+  }
+}
+
+function editarProyecto(id) {
+  const project = projectsData.find((p) => p.id === id);
+  if (project) {
+    const nuevoNombre = prompt("Edita el nombre del proyecto:", project.nombre);
+    if (nuevoNombre && nuevoNombre.trim() !== "") {
+      project.nombre = nuevoNombre.trim();
+      guardarDatos();
+      renderizarProyectos();
+    }
+  }
+}
+
+function eliminarProyecto(id) {
+  if (confirm("¿Estás seguro de que quieres eliminar este proyecto?")) {
+    projectsData = projectsData.filter((p) => p.id !== id);
+    guardarDatos();
+    renderizarProyectos();
+  }
+}
+
+// --- Funciones para la escaleta ---
 function mostrarModalCapitulo() {
   // Reiniciar formulario
   document.getElementById("chapter-title").value = "";
@@ -560,8 +689,17 @@ function generarId() {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
 
+function generarGuid() {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    var r = (Math.random() * 16) | 0,
+      v = c == "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
 function guardarDatos() {
   const data = {
+    projects: projectsData,
     escaleta: escaletaData,
     personajes: personajesData,
   };
@@ -575,11 +713,13 @@ function cargarDatosGuardados() {
   if (datosGuardados) {
     try {
       const data = JSON.parse(datosGuardados);
+      projectsData = data.projects || [];
       escaletaData = data.escaleta || { acto1: [], acto2: [], acto3: [] };
       personajesData = data.personajes || [];
 
       // Renderizar datos cargados
       renderizarCapitulos();
+      renderizarProyectos(); // Asegurarse de renderizar proyectos al cargar
     } catch (e) {
       console.error("Error al cargar datos guardados:", e);
     }
@@ -587,17 +727,19 @@ function cargarDatosGuardados() {
 }
 
 function inicializarDatosEjemplo() {
+  // Proyectos de ejemplo
+  projectsData = [];
+
   // Personajes de ejemplo
   personajesData = [];
 
   // Capítulos de ejemplo
   escaletaData.acto1 = [];
-
-   escaletaData.acto2 = [];
-
-   escaletaData.acto3 = [];
+  escaletaData.acto2 = [];
+  escaletaData.acto3 = [];
 
   // Renderizar datos de ejemplo
   renderizarCapitulos();
+  renderizarProyectos();
   guardarDatos();
 }
