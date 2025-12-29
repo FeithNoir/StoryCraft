@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StoryCraft - Gestor para Escritores</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Navegación -->
+    <nav class="bg-gradient-to-r from-blue-900 to-purple-900 text-white p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl md:text-3xl font-bold title-font"><i class="fas fa-book-open mr-2"></i>StoryCraft</h1>
+            <div class="flex space-x-4">
+                <button id="nav-escaleta" class="nav-btn px-4 py-2 rounded-lg bg-blue-700 hover:bg-blue-600 transition-colors">
+                    <i class="fas fa-list-ol mr-2"></i>Escaleta
+                </button>
+                <button id="nav-personajes" class="nav-btn px-4 py-2 rounded-lg bg-transparent hover:bg-blue-800 transition-colors">
+                    <i class="fas fa-users mr-2"></i>Personajes
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-4 md:p-6">
+        <!-- Módulo de Escaleta -->
+        <div id="escaleta-module" class="module">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 title-font">Escaleta de la Historia</h2>
+                <button id="guardar-escaleta" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                    <i class="fas fa-save mr-2"></i>Guardar Escaleta
+                </button>
+            </div>
+            
+            <!-- Acordeón de tres actos -->
+            <div class="space-y-6">
+                <!-- Acto 1: Inicio -->
+                <div class="acto-1 accordion bg-white rounded-xl shadow-lg border-l-8 overflow-hidden">
+                    <div class="accordion-header flex justify-between items-center p-5 bg-gradient-to-r from-blue-50 to-white cursor-pointer">
+                        <div class="flex items-center">
+                            <div class="badge-acto-1 text-white px-3 py-1 rounded-full mr-4">Acto I</div>
+                            <h3 class="text-xl md:text-2xl font-bold text-gray-800">Inicio</h3>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <span class="text-gray-600 capitulo-count">Capítulos: 0</span>
+                            <i class="fas fa-chevron-down text-blue-600 text-lg transition-transform"></i>
+                        </div>
+                    </div>
+                    <div class="accordion-content p-5 border-t border-gray-200 hidden">
+                        <p class="text-gray-600 mb-4">Presenta a los personajes principales, el escenario y el conflicto inicial. Aquí se establece el "status quo" antes de que comience la acción principal.</p>
+                        
+                        <!-- Lista de capítulos del acto 1 -->
+                        <div id="acto1-chapters" class="space-y-4 mb-6">
+                            <!-- Los capítulos se agregarán aquí dinámicamente -->
+                        </div>
+                        
+                        <button class="add-chapter-btn px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors" data-acto="1">
+                            <i class="fas fa-plus mr-2"></i>Añadir Capítulo
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Acto 2: Nudo -->
+                <div class="acto-2 accordion bg-white rounded-xl shadow-lg border-l-8 overflow-hidden">
+                    <div class="accordion-header flex justify-between items-center p-5 bg-gradient-to-r from-green-50 to-white cursor-pointer">
+                        <div class="flex items-center">
+                            <div class="badge-acto-2 text-white px-3 py-1 rounded-full mr-4">Acto II</div>
+                            <h3 class="text-xl md:text-2xl font-bold text-gray-800">Nudo</h3>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <span class="text-gray-600 capitulo-count">Capítulos: 0</span>
+                            <i class="fas fa-chevron-down text-green-600 text-lg transition-transform"></i>
+                        </div>
+                    </div>
+                    <div class="accordion-content p-5 border-t border-gray-200 hidden">
+                        <p class="text-gray-600 mb-4">Desarrolla el conflicto principal, aumenta la tensión y presenta obstáculos para los personajes. Es la parte más extensa de la historia.</p>
+                        
+                        <!-- Lista de capítulos del acto 2 -->
+                        <div id="acto2-chapters" class="space-y-4 mb-6">
+                            <!-- Los capítulos se agregarán aquí dinámicamente -->
+                        </div>
+                        
+                        <button class="add-chapter-btn px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors" data-acto="2">
+                            <i class="fas fa-plus mr-2"></i>Añadir Capítulo
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Acto 3: Desenlace -->
+                <div class="acto-3 accordion bg-white rounded-xl shadow-lg border-l-8 overflow-hidden">
+                    <div class="accordion-header flex justify-between items-center p-5 bg-gradient-to-r from-purple-50 to-white cursor-pointer">
+                        <div class="flex items-center">
+                            <div class="badge-acto-3 text-white px-3 py-1 rounded-full mr-4">Acto III</div>
+                            <h3 class="text-xl md:text-2xl font-bold text-gray-800">Desenlace</h3>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <span class="text-gray-600 capitulo-count">Capítulos: 0</span>
+                            <i class="fas fa-chevron-down text-purple-600 text-lg transition-transform"></i>
+                        </div>
+                    </div>
+                    <div class="accordion-content p-5 border-t border-gray-200 hidden">
+                        <p class="text-gray-600 mb-4">Resuelve el conflicto principal, muestra las consecuencias y concluye la historia. Los personajes alcanzan (o no) sus objetivos.</p>
+                        
+                        <!-- Lista de capítulos del acto 3 -->
+                        <div id="acto3-chapters" class="space-y-4 mb-6">
+                            <!-- Los capítulos se agregarán aquí dinámicamente -->
+                        </div>
+                        
+                        <button class="add-chapter-btn px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors" data-acto="3">
+                            <i class="fas fa-plus mr-2"></i>Añadir Capítulo
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Módulo de Personajes -->
+        <div id="personajes-module" class="module hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 title-font">Gestor de Personajes</h2>
+                <button id="nuevo-personaje" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    <i class="fas fa-user-plus mr-2"></i>Nuevo Personaje
+                </button>
+            </div>
+            
+            <!-- Lista de personajes -->
+            <div id="personajes-lista" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <!-- Los personajes se agregarán aquí dinámicamente -->
+            </div>
+            
+            <!-- Formulario para crear/editar personaje -->
+            <div id="personaje-form-container" class="bg-white rounded-xl shadow-lg p-6 hidden">
+                <h3 class="text-xl font-bold text-gray-800 mb-6">Crear/Editar Personaje</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-700 mb-2" for="personaje-nombre">Nombre *</label>
+                        <input type="text" id="personaje-nombre" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    
+                    <div class="flex space-x-4">
+                        <div class="w-1/2">
+                            <label class="block text-gray-700 mb-2" for="personaje-edad">Edad</label>
+                            <input type="number" id="personaje-edad" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        
+                        <div class="w-1/2">
+                            <label class="block text-gray-700 mb-2" for="personaje-genero">Género</label>
+                            <select id="personaje-genero" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="">Seleccionar</option>
+                                <option value="masculino">Masculino</option>
+                                <option value="femenino">Femenino</option>
+                                <option value="no-binario">No binario</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2" for="personaje-metas">Metas/Objetivos</label>
+                        <textarea id="personaje-metas" rows="3" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="¿Qué quiere lograr este personaje?"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2" for="personaje-historia">Historia de fondo</label>
+                        <textarea id="personaje-historia" rows="3" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="¿Cuál es el pasado del personaje?"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2" for="personaje-gustos">Gustos</label>
+                        <textarea id="personaje-gustos" rows="2" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="¿Qué le gusta al personaje?"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2" for="personaje-disgustos">Disgustos</label>
+                        <textarea id="personaje-disgustos" rows="2" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="¿Qué no le gusta al personaje?"></textarea>
+                    </div>
+                </div>
+                
+                <div class="flex justify-end space-x-4 mt-8">
+                    <button id="cancelar-personaje" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors">
+                        Cancelar
+                    </button>
+                    <button id="guardar-personaje" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                        Guardar Personaje
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para crear capítulo -->
+    <div id="chapter-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-2xl mx-4">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">Añadir Capítulo</h3>
+            
+            <div class="mb-6">
+                <label class="block text-gray-700 mb-2" for="chapter-title">Título del Capítulo *</label>
+                <input type="text" id="chapter-title" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Ej: Encuentro en la posada">
+            </div>
+            
+            <div class="mb-6">
+                <label class="block text-gray-700 mb-2" for="chapter-desc">Descripción del Capítulo *</label>
+                <textarea id="chapter-desc" rows="4" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Describe lo que sucede en este capítulo..."></textarea>
+            </div>
+            
+            <div class="mb-6">
+                <label class="block text-gray-700 mb-2">Personajes en este capítulo</label>
+                <div id="personajes-disponibles" class="flex flex-wrap gap-2">
+                    <!-- Los personajes disponibles se mostrarán aquí -->
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-4">
+                <button id="cancel-chapter" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors">
+                    Cancelar
+                </button>
+                <button id="save-chapter" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    Guardar Capítulo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="main.js"></script>
+</body>
+</html>
