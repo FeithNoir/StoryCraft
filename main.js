@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Botones para guardar escaleta
   document
     .getElementById("guardar-escaleta")
-    .addEventListener("click", guardarEscaleta);
+    .addEventListener("click", guardarDatos);
 
   // Botones para gestionar personajes
   document
@@ -165,6 +165,7 @@ function guardarCapitulo() {
   // Actualizar la vista
   renderizarCapitulos();
   cerrarModalCapitulo();
+  guardarDatos();
 }
 
 function renderizarCapitulos() {
@@ -180,11 +181,8 @@ function renderizarCapitulos() {
     const container = document.getElementById(`${actoKey}-chapters`);
 
     // Actualizar contador
-    const countElement = document.querySelector(
-      `.${actoKey}-chapters .capitulo-count`
-    );
     document.querySelector(
-      `.${actoKey} .capitulo-count`
+      `.acto-${i} .capitulo-count`
     ).textContent = `Capítulos: ${capitulos.length}`;
 
     // Si no hay capítulos, mostrar mensaje
@@ -271,6 +269,7 @@ function renderizarCapitulos() {
         if (confirm("¿Estás seguro de que quieres eliminar este capítulo?")) {
           escaletaData[`acto${acto}`].splice(index, 1);
           renderizarCapitulos();
+          guardarDatos();
         }
       });
     });
@@ -345,6 +344,7 @@ function guardarPersonaje() {
   // Actualizar la vista
   renderizarPersonajes();
   ocultarFormularioPersonaje();
+  guardarDatos();
 
   // Actualizar capítulos si están abiertos
   if (
@@ -519,6 +519,7 @@ function renderizarPersonajes() {
         // Eliminar personaje de la lista
         personajesData.splice(index, 1);
         renderizarPersonajes();
+        guardarDatos();
 
         // Actualizar capítulos si están abiertos
         if (
@@ -559,14 +560,13 @@ function generarId() {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
 
-function guardarEscaleta() {
+function guardarDatos() {
   const data = {
     escaleta: escaletaData,
     personajes: personajesData,
   };
 
   localStorage.setItem("storycraft-data", JSON.stringify(data));
-  alert("Escaleta guardada exitosamente.");
 }
 
 function cargarDatosGuardados() {
@@ -588,61 +588,16 @@ function cargarDatosGuardados() {
 
 function inicializarDatosEjemplo() {
   // Personajes de ejemplo
-  personajesData = [
-    {
-      id: "personaje1",
-      nombre: "Alejandra Reyes",
-      edad: 28,
-      genero: "femenino",
-      metas:
-        "Resolver el misterio de la desaparición de su hermano y limpiar el nombre de su familia.",
-      historia:
-        "Ex detective de la policía que renunció después de que su hermano fuera acusado falsamente de un crimen.",
-      gustos: "Café negro, libros de misterio, caminatas nocturnas",
-      disgustos: "Injusticias, mentiras, autoridades corruptas",
-    },
-    {
-      id: "personaje2",
-      nombre: "Samuel Ortega",
-      edad: 45,
-      genero: "masculino",
-      metas:
-        "Mantener el control sobre su imperio criminal y proteger a su hija de la vida que él lleva.",
-      historia:
-        "Líder de una organización criminal que surgió de los barrios marginales. Viudo y padre sobreprotector.",
-      gustos: "Puros caros, jazz clásico, ajedrez",
-      disgustos: "Traidores, policías, desorden",
-    },
-  ];
+  personajesData = [];
 
   // Capítulos de ejemplo
-  escaletaData.acto1 = [
-    {
-      titulo: "La llamada anónima",
-      descripcion:
-        "Alejandra recibe una llamada misteriosa que sugiere que su hermano podría estar vivo. La llamada la dirige a un bar en el puerto.",
-      personajes: ["personaje1"],
-    },
-  ];
+  escaletaData.acto1 = [];
 
-  escaletaData.acto2 = [
-    {
-      titulo: "Encuentro en el muelle",
-      descripcion:
-        "Alejandra se reúne con un informante que tiene información sobre Samuel Ortega y su conexión con la desaparición de su hermano.",
-      personajes: ["personaje1", "personaje2"],
-    },
-  ];
+   escaletaData.acto2 = [];
 
-  escaletaData.acto3 = [
-    {
-      titulo: "La verdad revelada",
-      descripcion:
-        "Alejandra confronta a Samuel y descubre la verdad sobre lo que sucedió con su hermano. Debe tomar una decisión difícil sobre la justicia.",
-      personajes: ["personaje1", "personaje2"],
-    },
-  ];
+   escaletaData.acto3 = [];
 
   // Renderizar datos de ejemplo
   renderizarCapitulos();
+  guardarDatos();
 }
